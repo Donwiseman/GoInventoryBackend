@@ -46,7 +46,7 @@ class Item(Base):
         self.organization_id = kwargs.get("organization_id", None)
 
     def add(self, quantity: int, purchase_cost: float, time, description: str,
-            user_name):
+            user: object):
         """Adds more unit of an item and returns a purchase object"""
         from database import storage
         from .purchases import Purchase
@@ -54,7 +54,7 @@ class Item(Base):
         self.updated_at = time
         trans = {
             "date": time,
-            "user_name": user_name,
+            "user": user,
             "organization_id": self.organization_id,
             "item_id": self.id,
             "details": description,
@@ -67,7 +67,7 @@ class Item(Base):
         storage.save()
         return new_purchase
 
-    def remove(self, quantity: int, time, user_name: str,
+    def remove(self, quantity: int, time, user: object,
                description: str = None, sale: float = None):
         """removes some unit of an item and returns a sale object"""
         from database import storage
@@ -79,7 +79,7 @@ class Item(Base):
             sale = self.sale_price * quantity
         trans = {
             "date": time,
-            "user_name": user_name,
+            "user": user,
             "organization_id": self.organization_id,
             "item_id": self.id,
             "details": description,
