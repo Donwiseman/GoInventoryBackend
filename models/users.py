@@ -26,6 +26,7 @@ class User(Base):
     org_associations = relationship("OrgUserAssociation",
                                     back_populates="user", cascade='delete')
     org_created = relationship('Organization', back_populates='creator')
+    invites = relationship('Invite', back_populates='user')
 
     def __init__(self, **kwargs):
         """Constructor for the class"""

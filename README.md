@@ -304,6 +304,22 @@ This is the Backend application which manages the business logic and database of
         }
         ```
 
+#### api/v1/organizations/<organization_id>/invites
+- Handles sending invites to users to join the organization
+- **Methods**: Get, POST, DELETE
+- **AUTHENTICATION**: JWT
+    * GET Details:
+        + REQUIRED FORM DATA
+            - email: email of user to be invited
+            - role: role of user to be invited
+        + Accessible to only Admins
+        + JSON RESPONSE
+        ```
+        {
+            "message": "Invite sent to user"
+        }
+        ```
+
 #### api/v1/organizations/<organization_id>/products
 - Handles loading all products(with pagination) and creating new product
 - **Methods**: GET, POST

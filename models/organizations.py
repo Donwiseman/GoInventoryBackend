@@ -35,6 +35,8 @@ class Organization(Base):
                              cascade='delete')
     sales = relationship("Sale", back_populates="organization",
                          cascade='delete')
+    invites = relationship("Invite", back_populates="organization",
+                           cascade='delete')
 
     def __init__(self, **kwargs):
         """Initializes the class"""

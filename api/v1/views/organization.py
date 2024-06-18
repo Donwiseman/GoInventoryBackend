@@ -583,3 +583,59 @@ def categories(organization_id):
             }
             resp.append(cat_detail)
         return jsonify(resp)
+
+@app_look.route('/organizations/<organization_id>/invites',
+                methods=['GET', 'POST', 'DELETE'], strict_slashes=False)
+@jwt_required()
+def invites(organization_id):
+    """Handles the invites resource"""
+    user_id = get_jwt_identity()
+    if not user_id:
+        return jsonify({"message": "Invalid token"}), 400
+    user = storage.get_user_by_id(user_id)
+    if not user:
+        return jsonify({"message": "Token is invalid"}), 400
+    org = storage.get_org_by_id(organization_id)
+    if not org:
+        return jsonify({"message": "Organization dosent exist"}), 404
+    user_role = org.get_user_role(user_id)
+    if not user_role:
+        return jsonify({"message": "User not in Organization"}), 401
+
+    if request.method == "POST":
+        email = request.form.get('email')
+        role = request.form.get('role')
+        if not email or not role:
+            return jsonify({"message": "Incomplete parameters"}), 400
+        if role not in ["Admin", "Employee"]:
+            return jsonify({"message": "Invalid role"}), 400
+        employee = storage.get_user_by_email(email)
+        if not employee:
+            return jsonify({"message": "User not found"}), 404
+        if user_role != "Admin":
+            return jsonify({"message": "Only Admins can send invites"}), 401
+        if (storage.create_invite(org, employee, role)):
+            return jsonify({"message": "Invite sent"})
+        return jsonify({"message": "Invite already sent"})
+
+    if request.method == "GET":
+        invites = []
+        for invite in org.invites:
+            invites.append({
+                "email": invite.email,
+                "role": invite.role,
+                "created_at": org.localize(invite.created_at),
+                "status": invite.status
+            })
+        return jsonify(invites)
+
+    if request.method == "DELETE":
+        email = request.form.get('email')
+        if not email:
+            return jsonify({"message": "Incomplete parameters"}), 400
+        invite = storage.get_invite_by_email(email)
+        if not invite:
+            return jsonify({"message": "Invite not found"}), 404
+        storage.delete(invite)
+        storage.save()
+        return jsonify({"message": "Invite deleted"})
