@@ -14,7 +14,8 @@ class Sale(Base):
     date = Column(DateTime(timezone=True), nullable=False)
     organization_id = Column(String(128), ForeignKey("organizations.id"),
                              nullable=False)
-    done_by = Column(String(128), nullable=False)
+    staff_name = Column(String(128), nullable=False)
+    staff_id = Column(String(60), nullable=False)
     item_id = Column(String(128), ForeignKey("items.id"), nullable=False)
     quantity = Column(Integer, nullable=False)
     sale_total = Column(Float, nullable=False)
@@ -28,7 +29,8 @@ class Sale(Base):
         self.id = str(uuid.uuid4())
         self.date = kwargs.get("date")
         self.organization_id = kwargs.get("organization_id")
-        self.done_by = kwargs.get("user_name")
+        self.staff_name = kwargs.get("user").full_name()
+        self.staff_id = kwargs.get("user").id
         self.item_id = kwargs.get("item_id")
         self.quantity = kwargs.get("quantity")
         self.sale_total = kwargs.get("total_cost")
@@ -47,6 +49,6 @@ class Sale(Base):
             "quantity": self.quantity,
             "total_cost": self.sale_total,
             "products_in_store": self.items_left,
-            "transaction_done_by": self.done_by
+            "transaction_done_by": self.staff_name
         }
         return tr

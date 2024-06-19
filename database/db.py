@@ -7,6 +7,7 @@ from models.items import Item
 from models.categories import Category
 from models.purchases import Purchase
 from models.sales import Sale
+from models.invites import Invite
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 import os
@@ -130,3 +131,13 @@ class Database:
             return user
         else:
             return None
+ 
+    def create_invite(self, org: Organization, employee: User, role: str) -> bool:
+        """Creates an invite for an employee to join an organization"""
+        for invite in org.invites:
+            if (invite.user_id == employee.id) and (invite.is_active):
+                return False
+        invite = Invite(org.id, employee.id, role)
+        self.__session.add(invite)
+        self.__session.commit()
+        return True
