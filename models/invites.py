@@ -15,7 +15,7 @@ class Invite(Base):
     organization = relationship('Organization',
                                 back_populates='invites')
     user = relationship('User', back_populates='invites')
-    created_at = Column(DateTime(timezone=True), default=datetime.now(datetime.UTC))
+    created_at = Column(DateTime(timezone=True), default=datetime.utcnow)
     status = Column(String(32), default="pending")
     is_active = Column(Boolean, default=True)
 
