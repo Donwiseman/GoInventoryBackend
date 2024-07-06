@@ -2,6 +2,7 @@
 from models import Base
 from models.users import User
 from models.organizations import Organization
+from models.industries import Industry
 from models.association import OrgUserAssociation
 from models.items import Item
 from models.categories import Category
@@ -141,3 +142,18 @@ class Database:
         self.__session.add(invite)
         self.__session.commit()
         return True
+    
+    def create_industry(self, name: str) -> str:
+        """Creates an industry"""
+        industry = self.__session.query(Industry).filter(Industry.name == name).first()
+        if industry:
+            return "Industry already exists"
+        industry = Industry(name)
+        self.__session.add(industry)
+        self.__session.commit()
+        return "Industry created"
+    
+    def get_industry_list(self) -> list:
+        """Returns a list of industries"""
+        industries = self.__session.query(Industry).all()
+        return industries
