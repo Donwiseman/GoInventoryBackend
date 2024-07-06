@@ -24,6 +24,7 @@ class Organization(Base):
     token_expiry = Column(DateTime)
     image = Column(String(512))
     creator = relationship("User", back_populates='org_created')
+    industry_name = Column(String(128), ForeignKey("industries.name"))
     user_associations = relationship("OrgUserAssociation",
                                      back_populates="organization",
                                      cascade='delete')
@@ -37,6 +38,7 @@ class Organization(Base):
                          cascade='delete')
     invites = relationship("Invite", back_populates="organization",
                            cascade='delete')
+    industry = relationship("Industry", back_populates="organizations")
 
     def __init__(self, **kwargs):
         """Initializes the class"""
@@ -45,6 +47,7 @@ class Organization(Base):
         self.country = kwargs.get("country")
         self.address = kwargs.get("address")
         self.creator_id = kwargs.get("user_id")
+        self.industry_name = kwargs.get("industry_name")
         self.description = kwargs.get("description")
         self.time_zone = kwargs.get("timezone")
         self.mobile = kwargs.get("mobile")
