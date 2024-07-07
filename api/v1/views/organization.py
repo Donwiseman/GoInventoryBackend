@@ -29,6 +29,17 @@ def supported_Countries():
     return jsonify(countries)
 
 
+@app_look.route('/industries', methods=['GET'], strict_slashes=False)
+@jwt_required()
+def industries():
+    """Returns a list of industries"""
+    industry_list = []
+    industries = storage.get_industry_list()
+    for industry in industries:
+        industry_list.append(industry.name)
+    return jsonify(industry_list)
+
+
 @app_look.route('/organizations', methods=['GET', 'POST'],
                 strict_slashes=False)
 @jwt_required()
@@ -51,6 +62,7 @@ def organizations():
             "mobile": request.form.get('mobile'),
             "timezone": request.form.get('timezone'),
             "image": request.form.get('image'),
+            "industry_name": request.form.get('industry'),
             "user_id": user_id
         }
         if not kwargs['name'] or not kwargs['country'] or not \
