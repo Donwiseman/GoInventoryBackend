@@ -178,6 +178,23 @@ This is the Backend application which manages the business logic and database of
         ]
         ```
 
+#### api/v1/industries
+- This sends all supported industries
+- **Methods**: GET
+- **AUTHENTICATION**: JWT
+    * GET DETAILS:
+        + NO REQUIRED FIELDS
+        + JSON RESPONSE
+        ```
+        [
+            "Agriculture",
+            "Automobile",
+            "Banking",
+            "Construction",
+            ...
+        ]
+        ```
+
 #### api/v1/organizations
 - This allows creation of an organization and returns organizations user belong to
 - **Methods**: GET, POST
@@ -187,6 +204,7 @@ This is the Backend application which manages the business logic and database of
             - name
             - country
             - timezone
+            - industry
             - description (optional)
             - mobile (optional)
             - address (optional)

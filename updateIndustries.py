@@ -19,5 +19,6 @@ if __name__ == "__main__":
     for industry in Industry_list:
         storage.create_industry(industry)
     print("Industries list updated")
-    print(storage.get_industry_list())
+    for industry in storage.get_industry_list():
+        print(industry.name)
     storage.end_session()
